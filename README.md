@@ -12,7 +12,7 @@ A futuro, sería interesante incorporar también:
 
 **Miembros del grupo:**
 
-- Rocío Colmena Santos [(@rcolmena)](https://github.com/rcolmena)
-- Andrés Fernández Alcázar [(@af2047)](https://github.com/af2047)
-- Lucía Núñez Alonso [(@lucianunezalonso)](https://github.com/lucianunezalonso)
-- Laura Teruel Montero [(@lauraateruuel)](https://github.com/lauraateruuel)
+- Rocío Colmena Santos [@rcolmena](https://github.com/rcolmena)
+- Andrés Fernández Alcázar [@af2047](https://github.com/af2047)
+- Lucía Núñez Alonso [@lucianunezalonso](https://github.com/lucianunezalonso)
+- Laura Teruel Montero [@lauraateruuel](https://github.com/lauraateruuel)
