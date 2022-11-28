@@ -1,21 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
+import os
+import replicate
 
 app = FastAPI()
 
 
+
+# Configurar modelo
+os.environ['REPLICATE_API_TOKEN'] = '1d00c4a2874d2acdf17b8092205ee974142f6763'
+model = replicate.models.get('methexis-inc/img2prompt')
+version = model.versions.get('50adaf2d3ad20a6f911a8a9e3ccf777b263b8596fbd2c8fc26e8888f8a0edbb5')
+
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hola mundo"}
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
+@app.post("/img2txt/")
+async def create_upload_file(file: UploadFile):
+    #output = version.predict(image=file)
+    return {"filename": file.filename}#,
+    #"output": output}
