@@ -17,6 +17,16 @@ async def root():
 
 @app.post("/img2txt/")
 async def create_upload_file(file: UploadFile):
-    #output = version.predict(image=file)
-    return {"filename": file.filename}#,
-    #"output": output}
+    try:
+        contents = file.file.read()
+        with open(file.filename, 'wb') as f:
+            f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+
+    output = version.predict(image=open("minigato.jpg", 'rb'))
+
+    return {"message": f"Successfully uploaded {file.filename}",
+    "output": output}
