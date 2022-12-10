@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
+
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
@@ -32,15 +34,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  var imageFile;
 
-  @override
+
+  // CONSTRUCTOR
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
@@ -78,34 +77,115 @@ class _MyHomePageState extends State<MyHomePage> {
 
         title: Text(widget.title),
       ),
-      body: Center(
 
+
+      body: Center(
         child: Column(
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Bienvenid@ a IArt!'
-                  '',
+                'Bienvenid@ a IArt!'
             ),
             const Text(
-              'Ya puedes escanear tu primer cuadro',
+                ''
+            ),
+
+            _setImageView(),
+
+            const Text(
+                ''
             ),
             const Text(
-              '',
+                ''
             ),
             FloatingActionButton(
               onPressed: () {
-                // Add your onPressed code here!
+                _showSelectionDialog(context);
               },
               backgroundColor: Colors.deepPurpleAccent,
-              child: const Icon(Icons.camera_alt_outlined),
+              child: Icon(Icons.camera_alt_outlined),
             ),
+
+
+
+
           ],
         ),
+
       ),
 
-      // This trailing comma makes auto-formatting nicer for build methods.
+
     );
   }
+
+
+  // MÉTODO QUE NOS PREGUNTA SI QUEREMOS IR A CÁMARA O
+  // COGER LA FOTO DE LA GALERÍA
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("De dónde quieres seleccionar la foto?"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Galería"),
+                      onTap: () {
+                        _openGallery(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Cámara"),
+                      onTap: () {
+                        _openCamera(context);
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  // SI ESCOJO LA OPCIÓN DE GALERÍA
+  void _openGallery(BuildContext context) async {
+    final ImagePicker _picker = ImagePicker();
+    var picture = await _picker.pickImage(source: ImageSource.gallery);
+    this.setState(() {
+      imageFile = picture;
+    });
+    Navigator.of(context).pop();
+  }
+
+  // SI ESCOJO LA OPCIÓN DE ABRIR LA CÁMARA
+  void _openCamera(BuildContext context) async {
+    final ImagePicker _picker = ImagePicker();
+    var picture = await _picker.pickImage(source: ImageSource.camera);
+    this.setState(() {
+      imageFile = picture;
+    });
+    Navigator.of(context).pop();
+  }
+
+
+  // VERIFICA SI LA VAR ES DISTINTA DE NULL
+  Widget _setImageView() {
+    if (imageFile != null) {
+      return Image.file(imageFile, width: 500, height: 500);
+    } else {
+      return Text("Pulsa para escanear tu primer cuadro");
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
