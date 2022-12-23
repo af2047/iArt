@@ -1,6 +1,6 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, Response, UploadFile
+from fastapi.responses import FileResponse
 import logging
-import tokens
 
 logging.basicConfig(level=logging.INFO)
 logging.info(
@@ -46,7 +46,44 @@ async def img2txt(file: UploadFile):
     finally:
         file.file.close()
 
-    output = models.img2txt.predict(image=open("minigato.jpg", 'rb'))
+    output = models.img2txt_model(file.filename)
+    #output = models.img2txt_model(image=open(file.filename, 'rb'))
 
     return {"message": f"Successfully uploaded {file.filename}",
     "output": output}
+
+@app.post("/blend_images/")
+async def blend_images(content_image: UploadFile, style_image: UploadFile):
+    try:
+        content = await content_image.read()
+        with open(content_image.filename, 'wb') as f:
+            f.write(content)
+        style = await style_image.read()
+        with open(style_image.filename, 'wb') as f:
+            f.write(style)
+    except Exception:
+        return {"message": "La imagen no se ha podido cargar."}
+    finally:
+        content_image.file.close()
+        style_image.file.close()
+
+    output = models.blend_images_model(content_image.filename, style_image.filename)
+    output.save("bop.jpg")
+
+    return FileResponse("bop.jpg")
+
+@app.post("/blend_image_with_{style}")
+async def blend_image_with_style(content_image: UploadFile, style):
+    try:
+        content = await content_image.read()
+        with open(content_image.filename, 'wb') as f:
+            f.write(content)
+    except Exception:
+        return {"message": "La imagen no se ha podido cargar."}
+    finally:
+        content_image.file.close()
+
+    output = models.blend_style_model(content_image.filename, style)
+    output.save("bop.jpg")
+
+    return FileResponse("bop.jpg")

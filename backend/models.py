@@ -1,18 +1,27 @@
+import logging
+
 ## Modelo 1 - Descripción textual de imágenes
 
-import os
-import random
+# Este modelo requiere una clave API de replicate.com. Ponerla en el archivo tokens.py.
+# El modelo se usa sólo para pruebas y la app no lo utiliza, de forma que si no tenemos la clave no pasa nada.
+
 import replicate
-import tokens
-from skimage import io
+try:
+    import tokens
+    import os
+    os.environ['REPLICATE_API_TOKEN'] = tokens.REPLICATE_API_TOKEN
+  
+    model = replicate.models.get('methexis-inc/img2prompt')
+    img2txt = model.versions.get('50adaf2d3ad20a6f911a8a9e3ccf777b263b8596fbd2c8fc26e8888f8a0edbb5')
 
-# Configurar modelo
-os.environ['REPLICATE_API_TOKEN'] = tokens.REPLICATE_API_TOKEN
-model = replicate.models.get('methexis-inc/img2prompt')
-img2txt = model.versions.get('50adaf2d3ad20a6f911a8a9e3ccf777b263b8596fbd2c8fc26e8888f8a0edbb5')
+    def img2txt_model(image_path):
+        return img2txt.predict(image=open(image_path, 'rb'))
 
-def img2txt(image):
-    img2txt.predict(image=open("images/minigato.jpg", 'rb'))
+    logging.info("[Fase 1 - Modelo img2txt] Modelo cargado.")
+
+except ImportError:
+    logging.warn("[Fase 1 - Modelo img2txt] No se ha encontrado el archivo tokens.py con la clave API. El modelo no se podrá ejecutar.")
+
 
 ## Modelo 2 - Transferencia de estilo artístico
 
@@ -20,8 +29,7 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 import PIL.Image
-import time
-import functools
+import random
 
 blend = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/1')
 
@@ -54,8 +62,7 @@ def blend_images_model(content_path, style_path):
     stylized_image = blend(tf.constant(load_image(content_path)), tf.constant(load_image(style_path)))[0]
     return tensor_to_image(stylized_image)
 
-def blend_style_model(content_path, style_name):
-    # TODO renombrar archivos
-    style_path = f"paintings/{style_name}/{style_name}{random.randInt(1,6)}.jpg"
+def blend_style_model(content_path, style_name):    
+    style_path = f"paintings/{style_name}/{style_name}{random.randint(1,5)}.jpg"
     stylized_image = blend(tf.constant(load_image(content_path)), tf.constant(load_image(style_path)))[0]
     return tensor_to_image(stylized_image)

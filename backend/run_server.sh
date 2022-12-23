@@ -1,6 +1,6 @@
 set -e
 
-mode="${1:-'test'}"
+mode="${1:-test}"
 
 case $mode in
 
@@ -9,7 +9,7 @@ case $mode in
     ;;
 
   "prod")
-    python3 -m uvicorn main:app --host 0.0.0.0 --reload 
+    python3 -m uvicorn main:app --host 0.0.0.0 
     ;;
 
   *)
