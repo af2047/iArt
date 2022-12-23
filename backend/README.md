@@ -16,4 +16,8 @@ Para activar el servidor:
 * API: [134.209.89.62:8000]. Funciones implementadas:
     * "hola mundo" en `/`
     * Descripción en texto a partir de imagen en `/img2txt`
+    * Transferencia de estilo en:
+        * `blend_images`: transfiere el estilo de la segunda imagen a la primera
+        * `blend_image_with_{style}`: transfiere el estilo a la imagen
+    * Detección de estilo en `detect_style`
 * Documentación autogenerada: [http://134.209.89.62:8000/docs]

@@ -49,8 +49,7 @@ async def img2txt(file: UploadFile):
     output = models.img2txt_model(file.filename)
     #output = models.img2txt_model(image=open(file.filename, 'rb'))
 
-    return {"message": f"Successfully uploaded {file.filename}",
-    "output": output}
+    return {"description": output}
 
 @app.post("/blend_images/")
 async def blend_images(content_image: UploadFile, style_image: UploadFile):
@@ -87,3 +86,18 @@ async def blend_image_with_style(content_image: UploadFile, style):
     output.save("bop.jpg")
 
     return FileResponse("bop.jpg")
+
+@app.post("/detect_style")
+async def detect_style(content_image: UploadFile):
+    try:
+        content = await content_image.read()
+        with open(content_image.filename, 'wb') as f:
+            f.write(content)
+    except Exception:
+        return {"message": "La imagen no se ha podido cargar."}
+    finally:
+        content_image.file.close()
+
+    output = models.detect_style_model(content_image.filename)
+
+    return {"description": output}

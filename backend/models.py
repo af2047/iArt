@@ -66,3 +66,27 @@ def blend_style_model(content_path, style_name):
     style_path = f"paintings/{style_name}/{style_name}{random.randint(1,5)}.jpg"
     stylized_image = blend(tf.constant(load_image(content_path)), tf.constant(load_image(style_path)))[0]
     return tensor_to_image(stylized_image)
+
+## Modelo 3 - Detección de estilo artístico
+
+import tensorflow as tf
+from tensorflow import keras
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Carga del modelo
+model = tf.keras.models.load_model("models/VGG16/VGG16model_10epochs")
+
+def detect_style_model(image_path):
+    img = cv2.imread(image_path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    plt.imshow(img)
+    img = cv2.resize(img,(224,224))     # resize image to match model's expected sizing
+    img = np.reshape(img,[1,224,224,3]) # return the image with shaping that TF wants.
+    prediction = model.predict(img).tolist()
+    best_guess = max(prediction)
+    best_guess_index = prediction.index(best_guess)
+    styles = ['abstract', 'color_field_painting', 'cubism', 'expressionism',
+        'impressionism', 'realism', 'renaissance', 'romanticism']
+    return styles[best_guess_index]
