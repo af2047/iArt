@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
 import logging
+import random
 
 logging.basicConfig(level=logging.INFO)
 logging.info(
@@ -66,11 +67,12 @@ async def blend_images(content_image: UploadFile, style_image: UploadFile):
         style_image.file.close()
 
     output = models.blend_images_model(f"temp_images/{content_image.filename}", f"temp_images/{style_image.filename}")
-    output.save("result.jpg")
+    outputPath = f"temp_images/blend_images_result{random.randint(1, 1e12)}.jpg"
+    output.save(outputPath)
 
-    return FileResponse("result.jpg")
+    return FileResponse(outputPath)
 
-@app.post("/blend_image_with_{style}")
+@app.post("/blend_image_with_{style}/")
 async def blend_image_with_style(content_image: UploadFile, style):
     try:
         content = await content_image.read()
@@ -82,11 +84,12 @@ async def blend_image_with_style(content_image: UploadFile, style):
         content_image.file.close()
 
     output = models.blend_style_model(f"temp_images/{content_image.filename}", style)
-    output.save("result.jpg")
+    outputPath = f"temp_images/blend_image_with_{style}_result{random.randint(1, 1e12)}.jpg"
+    output.save(outputPath)
 
-    return FileResponse("result.jpg")
+    return FileResponse(outputPath)
 
-@app.post("/detect_style")
+@app.post("/detect_style/")
 async def detect_style(content_image: UploadFile):
     try:
         content = await content_image.read()

@@ -5,8 +5,8 @@ import logging
 # Este modelo requiere una clave API de replicate.com. Ponerla en el archivo tokens.py.
 # El modelo se usa sólo para pruebas y la app no lo utiliza, de forma que si no tenemos la clave no pasa nada.
 
-import replicate
 try:
+    import replicate
     import tokens
     import os
     os.environ['REPLICATE_API_TOKEN'] = tokens.REPLICATE_API_TOKEN
