@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-
-import 'dart:typed_data';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/services.dart';
@@ -29,7 +26,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Jason',
-
       ),
       home: const MyHomePage(title: 'IArt'),
     );
@@ -46,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 
 // CLASE PÁGINA DE INICIO-------------------------------------------------------
 class _MyHomePageState extends State<MyHomePage> {
-
   var imageFile;
   Uint8List? imageData;
 
@@ -60,53 +55,48 @@ class _MyHomePageState extends State<MyHomePage> {
   // Ejemplo para cargar imagenes
   void loadAsset() async {
     // El data tiene que ser el resultado de la función del modelo
-    Uint8List data = (await NetworkAssetBundle(
-        Uri.parse('https://img.freepik.com'))
-        .load(
+    Uint8List data =
+        (await NetworkAssetBundle(Uri.parse('https://img.freepik.com')).load(
 
-      // Poner aquí nuestra imagen
-        "/free-photo/friendly-smart-basenji-dog-giving-his-paw-close-up-isolated-white_346278-1626.jpg?w=1060&t=st=1673053018~exp=1673053618~hmac=2788a7883c07867fbcf48745bc69189b6c55d94459b3e27a01d26ff9d5d9993e")
-    )
-        .buffer
-        .asUint8List();
+                // Poner aquí nuestra imagen
+                "/free-photo/friendly-smart-basenji-dog-giving-his-paw-close-up-isolated-white_346278-1626.jpg?w=1060&t=st=1673053018~exp=1673053618~hmac=2788a7883c07867fbcf48745bc69189b6c55d94459b3e27a01d26ff9d5d9993e"))
+            .buffer
+            .asUint8List();
     // Sustituir esto por el resultado que nos da el servidor,
     // que ya está en formato de Uint8List
     setState(() => imageData = data);
   }
 
-
   // WIDGET CONSTRUCTOR (TODA LA PÁGINA DE INICIO)..............................
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( // Barrita de arriba
-        title: Text( widget.title , style: TextStyle(fontSize: 25)),
-        leading: Image.asset('assets/images/logoAATT.png', width: 50, height: 50)
-      ),
-
-      body: Center( // Contenido de la app
+      appBar: AppBar(
+          // Barrita de arriba
+          title: Text(widget.title, style: TextStyle(fontSize: 25)),
+          leading:
+              Image.asset('assets/images/logoAATT.png', width: 50, height: 50)),
+      body: Center(
+        // Contenido de la app
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset('assets/images/logoAATT.png', width: 300, height: 300),
-
             const Text(
-                'Bienvenid@\n', style: TextStyle(fontSize: 25),
+              'Bienvenid@\n',
+              style: TextStyle(fontSize: 25),
             ),
-
-            FloatingActionButton.large( // Botón de cámara
+            FloatingActionButton.large(
+              // Botón de cámara
               onPressed: () {
-
                 _showSelectionDialog(context);
-
               },
               backgroundColor: Colors.lightGreen,
               child: Icon(Icons.camera_alt_outlined),
             ),
-
             const Text(
-              '\n', style: TextStyle(fontSize: 25),
+              '\n',
+              style: TextStyle(fontSize: 25),
             ),
-
           ],
         ),
       ),
@@ -153,7 +143,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     Navigator.of(context).pop();
     _setScreen2();
-
   }
 
   // OPCIÓN DE ABRIR LA CÁMARA
@@ -182,7 +171,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return Text(" \n  \n Pulsa para escanear tu primer cuadro");
     }
   }
-
 }
 
 class Screen2 extends StatefulWidget {
@@ -209,141 +197,138 @@ class _Screen2State extends State<Screen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( // Barrita morada de arriba
+      appBar: AppBar(
+        // Barrita morada de arriba
         title: Text('iArt'),
       ),
-      body: Center( // Contenido de la app
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Tu foto: \n', style: TextStyle(fontSize: 20),),
+      body: Center(
+          // Contenido de la app
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+              Widget>[
+        const Text(
+          'Tu foto: \n',
+          style: TextStyle(fontSize: 20),
+        ),
 
-                Image.file(widget.imageFile, width: 200, height: 200),
+        Image.file(widget.imageFile, width: 200, height: 200),
 
-                const Text('\n\nCambiemos el estilo de tu foto\n', style: TextStyle(fontSize: 18)),
+        const Text('\n\nCambiemos el estilo de tu foto\n',
+            style: TextStyle(fontSize: 18)),
 
-                // BOTÓN CÁMARA (ESCANEAR CUADRO)
-                ElevatedButton(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 24, fontFamily: 'Jason'),
-                    backgroundColor: Colors.lightGreen,
+        // BOTÓN CÁMARA (ESCANEAR CUADRO)
+        ElevatedButton(
+          style: TextButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 24, fontFamily: 'Jason'),
+            backgroundColor: Colors.lightGreen,
+          ),
+          onPressed: () {
+            _openCameraMuseo(context);
+          },
+          child: const Text('ESCANEA UN CUADRO'),
+        ),
 
-                  ),
-                  onPressed: () {
-                    _openCameraMuseo(context);
-                  },
-                  child: const Text('ESCANEA UN CUADRO'),
-                ),
+        const Text('\nSi no, elige una corriente artística:\n',
+            style: TextStyle(fontSize: 18)),
 
+        // BOTONES SELECCIÓN DE CORRIENTES
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "realism";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Realismo"),
+            ),
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "expressionism";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Expresionismo"),
+            ),
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "abstract";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Abstracto"),
+            ),
+          ],
+        ),
 
-                const Text('\nSi no, elige una corriente artística:\n', style: TextStyle(fontSize: 18)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "color_field";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Color Field"),
+            ),
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "romanticism";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Romanticismo"),
+            ),
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "cubism";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Cubismo"),
+            ),
+          ],
+        ),
 
-
-                // BOTONES SELECCIÓN DE CORRIENTES
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "realism";
-                        _openScreen4(context,corriente);
-                        },
-                      child: Text("Realismo"),
-                    ),
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "expressionism";
-                        _openScreen4(context,corriente);
-                        },
-                      child: Text("Expresionismo"),
-                    ),
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "abstract";
-                        _openScreen4(context,corriente);
-                      },
-                      child: Text("Abstracto"),
-                    ),
-
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "color_field";
-                        _openScreen4(context,corriente);
-                      },
-                      child: Text("Color Field"),
-                    ),
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "romanticism";
-                        _openScreen4(context,corriente);
-                      },
-                      child: Text("Romanticismo"),
-                    ),
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "cubism";
-                        _openScreen4(context,corriente);
-                      },
-                      child: Text("Cubismo"),
-                    ),
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "impressionism";
-                        _openScreen4(context,corriente);                      },
-                      child: Text("Impresionismo"),
-                    ),
-                    OutlinedButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
-                      ),
-                      onPressed: () {
-                        String corriente= "renaissance";
-                        _openScreen4(context,corriente);                      },
-                      child: Text("Renacentismo"),
-                    ),
-                  ],
-                ),
-
-
-
-              ]
-          )
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "impressionism";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Impresionismo"),
+            ),
+            OutlinedButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18, fontFamily: 'Jason'),
+              ),
+              onPressed: () {
+                String corriente = "renaissance";
+                _openScreen4(context, corriente);
+              },
+              child: Text("Renacentismo"),
+            ),
+          ],
+        ),
+      ])),
     );
   }
 
@@ -352,16 +337,17 @@ class _Screen2State extends State<Screen2> {
     var pictureMuseo = await _picker.pickImage(source: ImageSource.camera);
     imageFileMuseo = File(pictureMuseo!.path);
 
-    nombreModeloCorriente= await obtenerCorriente(imageFileMuseo);
+    nombreModeloCorriente = await obtenerCorriente(imageFileMuseo);
 
-    imageModelo2fotos= await modelo2fotos(widget.imageFile, imageFileMuseo);
+    imageModelo2fotos = await modelo2fotos(widget.imageFile, imageFileMuseo);
 
     Navigator.of(context).pop();
     _setScreen3();
   }
 
   void _openScreen4(BuildContext context, String corriente) async {
-    imageModeloBiblioteca= await modelofotocorriente(widget.imageFile, corriente);
+    imageModeloBiblioteca =
+        await modelofotocorriente(widget.imageFile, corriente);
 
     Navigator.of(context).pop();
     _setScreen4();
@@ -370,21 +356,16 @@ class _Screen2State extends State<Screen2> {
   // MODELOS--------------------------------------------------------------------
   // MODELO BLEND IMAGEN + IMAGEN
   Future<Uint8List> modelo2fotos(File contentImage, File styleImage) async {
-
-    String contentFileName = contentImage.path
-        .split('/')
-        .last;
-    String styleFileName = styleImage.path
-        .split('/')
-        .last;
+    String contentFileName = contentImage.path.split('/').last;
+    String styleFileName = styleImage.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "content_image": await MultipartFile.fromFile(
-          contentImage.path, filename: contentFileName),
-      "style_image": await MultipartFile.fromFile(
-          styleImage.path, filename: styleFileName),
+      "content_image": await MultipartFile.fromFile(contentImage.path,
+          filename: contentFileName),
+      "style_image": await MultipartFile.fromFile(styleImage.path,
+          filename: styleFileName),
     });
-    var response = await Dio().post("$server/blend_images/", data: formData,
-        options: Options(responseType: ResponseType.bytes));
+    var response = await Dio().post("$server/blend_images/",
+        data: formData, options: Options(responseType: ResponseType.bytes));
     assert(response.statusCode == 200);
     //print(response.data);
     return response.data;
@@ -392,17 +373,14 @@ class _Screen2State extends State<Screen2> {
 
   // MODELO BLEND IMAGEN + CORRIENTE
   Future<Uint8List> modelofotocorriente(File image, String corriente) async {
-    String fileName = image.path
-        .split('/')
-        .last;
+    String fileName = image.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "content_image": await MultipartFile.fromFile(
-          image.path, filename: fileName),
+      "content_image":
+          await MultipartFile.fromFile(image.path, filename: fileName),
     });
     //pasar un parámetro para cualquier corriente (a la que me va a cambiar en vez de abstract)
-    var response = await Dio().post(
-        "$server/blend_image_with_$corriente/", data: formData,
-        options: Options(responseType: ResponseType.bytes));
+    var response = await Dio().post("$server/blend_image_with_$corriente/",
+        data: formData, options: Options(responseType: ResponseType.bytes));
     assert(response.statusCode == 200);
     //print(response.data);
     return response.data;
@@ -412,7 +390,8 @@ class _Screen2State extends State<Screen2> {
   Future<String> obtenerCorriente(File image) async {
     String fileName = image.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "content_image": await MultipartFile.fromFile(image.path, filename:fileName),
+      "content_image":
+          await MultipartFile.fromFile(image.path, filename: fileName),
     });
     var response = await Dio().post("$server/detect_style/", data: formData);
     assert(response.statusCode == 200);
@@ -422,14 +401,14 @@ class _Screen2State extends State<Screen2> {
 
 //-----------------------------------------------------------------------------
 
-
-
   Widget _setScreen3() {
     if (imageFileMuseo != null) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) {
-          return Screen3(imageModelo2fotos: imageModelo2fotos, nombreModeloCorriente: nombreModeloCorriente);
+          return Screen3(
+              imageModelo2fotos: imageModelo2fotos,
+              nombreModeloCorriente: nombreModeloCorriente);
         }),
       );
       return Text("");
@@ -439,17 +418,11 @@ class _Screen2State extends State<Screen2> {
   }
 
   Widget _setScreen4() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return Screen4(imageModeloBiblioteca: imageModeloBiblioteca);
-        })
-      );
-      return Text("");
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Screen4(imageModeloBiblioteca: imageModeloBiblioteca);
+    }));
+    return Text("");
   }
-
-
-
 }
 
 class Screen3 extends StatefulWidget {
@@ -461,69 +434,60 @@ class Screen3 extends StatefulWidget {
   var imageModelo2fotos;
   var nombreModeloCorriente;
 
-
   Screen3({this.imageModelo2fotos, this.nombreModeloCorriente});
 
   @override
   State<Screen3> createState() => _Screen3State();
-
 }
 
 class _Screen3State extends State<Screen3> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar( // Barrita morada de arriba
+      appBar: AppBar(
+        // Barrita morada de arriba
         title: Text('iArt'),
       ),
-      body: Center( // Contenido de la app
+      body: Center(
+          // Contenido de la app
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('El cuadro que has escaneado', style: TextStyle(fontSize: 18)),
-                Text('pertenece a la corriente:\n', style: TextStyle(fontSize: 18)),
-                Text('${traduccion(widget.nombreModeloCorriente)}\n', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const Text(' \nESTA ES TU NUEVA OBRA DE ARTE \n', style: TextStyle(fontSize: 20)),
-                Image.memory(widget.imageModelo2fotos, width: 300, height: 300),
-                const Text(' \n \n')
-              ]
-          )
-      ),
+            Text('El cuadro que has escaneado', style: TextStyle(fontSize: 18)),
+            Text('pertenece a la corriente:\n', style: TextStyle(fontSize: 18)),
+            Text('${traduccion(widget.nombreModeloCorriente)}\n',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(' \nESTA ES TU NUEVA OBRA DE ARTE \n',
+                style: TextStyle(fontSize: 20)),
+            Image.memory(widget.imageModelo2fotos, width: 300, height: 300),
+            const Text(' \n \n')
+          ])),
     );
   }
 
-  String traduccion(String palabraIngles)  {
+  String traduccion(String palabraIngles) {
     String palabraTraducida;
 
-    if (palabraIngles== 'abstract'){
-      palabraTraducida= 'ARTE ABSTRACTO';
-    }
-    else if(palabraIngles== 'cubism'){
-      palabraTraducida= 'CUBISMO';
-    }
-    else if(palabraIngles== 'expressionism'){
-      palabraTraducida= 'EXPRESIONISMO';
-    }
-    else if(palabraIngles== 'impressionism'){
-      palabraTraducida= 'IMPRESIONISMO';
-    }
-    else if(palabraIngles== 'color_field'){
-      palabraTraducida= 'COLOR FIELD';
-    }
-    else if(palabraIngles== 'renaissance'){
-      palabraTraducida= 'RENACENTISMO';
-    }
-    else if(palabraIngles== 'realism'){
-      palabraTraducida= 'REALISMO';
-    }
-    else {
+    if (palabraIngles == 'abstract') {
+      palabraTraducida = 'ARTE ABSTRACTO';
+    } else if (palabraIngles == 'cubism') {
+      palabraTraducida = 'CUBISMO';
+    } else if (palabraIngles == 'expressionism') {
+      palabraTraducida = 'EXPRESIONISMO';
+    } else if (palabraIngles == 'impressionism') {
+      palabraTraducida = 'IMPRESIONISMO';
+    } else if (palabraIngles == 'color_field') {
+      palabraTraducida = 'COLOR FIELD';
+    } else if (palabraIngles == 'renaissance') {
+      palabraTraducida = 'RENACENTISMO';
+    } else if (palabraIngles == 'realism') {
+      palabraTraducida = 'REALISMO';
+    } else {
       palabraTraducida = 'ROMANTICISMO';
     }
 
     return palabraTraducida;
   }
-
 }
 
 class Screen4 extends StatefulWidget {
@@ -541,25 +505,20 @@ class _Screen4State extends State<Screen4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( // Barrita morada de arriba
+      appBar: AppBar(
+        // Barrita morada de arriba
         title: Text('iArt'),
       ),
-      body: Center( // Contenido de la app
+      body: Center(
+          // Contenido de la app
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                  const Text('\nESTA ES TU NUEVA OBRA DE ARTE \n\n', style: TextStyle(fontSize: 20)),
-                  Image.memory(widget.imageModeloBiblioteca, width: 350, height: 350),
-                  const Text('\n\n\n')
-              ]
-          )
-      ),
+            const Text('\nESTA ES TU NUEVA OBRA DE ARTE \n\n',
+                style: TextStyle(fontSize: 20)),
+            Image.memory(widget.imageModeloBiblioteca, width: 350, height: 350),
+            const Text('\n\n\n')
+          ])),
     );
   }
-
 }
-
-
-
-
-
