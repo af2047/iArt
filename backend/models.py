@@ -85,8 +85,7 @@ def detect_style_model(image_path):
     img = cv2.resize(img,(224,224))     # resize image to match model's expected sizing
     img = np.reshape(img,[1,224,224,3]) # return the image with shaping that TF wants.
     prediction = model.predict(img).tolist()
-    best_guess = max(prediction)
-    best_guess_index = prediction.index(best_guess)
+    best_guess_index = np.argmax(prediction[0])
     styles = ['abstract', 'color_field_painting', 'cubism', 'expressionism',
         'impressionism', 'realism', 'renaissance', 'romanticism']
     return styles[best_guess_index]
