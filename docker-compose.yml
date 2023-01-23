@@ -1,0 +1,7 @@
+version: "1.0"
+services:
+  iart:
+    build: .
+    ports:
+      - "8000:8000"
+    restart: on-failure
